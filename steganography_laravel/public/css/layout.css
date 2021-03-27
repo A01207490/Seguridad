@@ -1,0 +1,33 @@
+.page-container {
+    position: relative;
+    min-height: 100vh;
+}
+
+.content-wrap {
+    padding-bottom: 6rem;
+    /* Footer height */
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 6rem;
+    /* Footer height */
+}
+
+.imgfit {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+.imgfit-lg {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.qrcode {
+    width: 100%;
+    height: 100%;
+}
