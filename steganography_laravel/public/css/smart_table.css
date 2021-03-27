@@ -1,0 +1,30 @@
+@media screen and (max-width: 639px) {
+    .smart-table thead {
+        display: none;
+    }
+
+    .smart-table tr,
+    .smart-table td {
+        display: block;
+    }
+
+    .smart-table tr:not(:last-child) {
+        border: 5px;
+    }
+    .smart-table td {
+        padding-left: 54%;
+        position: relative;
+    }
+    .smart-table td::before {
+        position: absolute;
+        padding: 5px;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 45%;
+        content: attr(data-col-title);
+        font-weight: bold;
+        background-color: #163683;
+        color: white;
+    }
+}
