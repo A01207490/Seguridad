@@ -6,6 +6,7 @@ use App\Steganography;
 use Illuminate\Http\Request;
 use \App\Tables\SteganographiesTable;
 use Illuminate\Support\Facades\Storage;
+use Response;
 
 
 class SteganographyController extends Controller
@@ -59,7 +60,8 @@ class SteganographyController extends Controller
      */
     public function show(Steganography $steganography)
     {
-        //
+        $steganography = Steganography::find($steganography->id);
+        return response()->download(storage_path('app/public/steganography/' . $steganography->id . '.png'));
     }
 
     /**
