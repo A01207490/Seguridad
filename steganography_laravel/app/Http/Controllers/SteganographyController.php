@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Steganography;
 use Illuminate\Http\Request;
+use \App\Tables\SteganographiesTable;
 
 class SteganographyController extends Controller
 {
@@ -14,7 +15,8 @@ class SteganographyController extends Controller
      */
     public function index()
     {
-        //
+        $table = (new SteganographiesTable)->setup();
+        return view('steganographies.index', compact('table'));
     }
 
     /**
@@ -24,7 +26,7 @@ class SteganographyController extends Controller
      */
     public function create()
     {
-        //
+        return view('steganographies.create');
     }
 
     /**

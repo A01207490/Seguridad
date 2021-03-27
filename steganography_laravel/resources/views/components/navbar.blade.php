@@ -5,7 +5,10 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto  d-flex align-items-center">
             <li class="nav-item mr-2 ml-2">
-                <a class="nav-link {{ Request::path() === '/' ? 'active' : '' }}" href="{{ url('/') }}">Steganography</a>
+                <a class="nav-link {{ Request::path() === '/' ? 'active' : '' }}" href="{{ url('/') }}">Welcome</a>
+            </li>
+            <li class="nav-item mr-2 ml-2">
+                <a class="nav-link {{ Request::path() === 'steganographies' ? 'active' : '' }}" href="{{ url('/steganographies') }}">Steganography</a>
             </li>
         </ul>
     </div>
