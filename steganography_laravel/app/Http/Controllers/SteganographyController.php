@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Steganography;
 use Illuminate\Http\Request;
 use \App\Tables\SteganographiesTable;
+use Illuminate\Support\Facades\Storage;
+
 
 class SteganographyController extends Controller
 {
@@ -37,7 +39,16 @@ class SteganographyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validateForm();
+        $steganography = Steganography::create(([
+            'steganography_key' => $request->steganography_key,
+            'steganography_message' => $request->steganography_message,
+        ]));
+        if(!($request->file('steganography_image') == null)){
+            $request->file('steganography_image')->storeAs('steganography', $steganography->id . '.png', 'public');
+        }
+        $index = 'steganographies.index';
+        return view('components.success', compact('index'));
     }
 
     /**
@@ -83,5 +94,16 @@ class SteganographyController extends Controller
     public function destroy(Steganography $steganography)
     {
         //
+    }
+
+    public function validateForm()
+    {
+        $rules = [
+            'steganography_key' => ['required'],
+            'steganography_message' => ['required'],
+            'steganography_image' => ['mimes:png,jpg,jpeg'],
+
+        ];
+        return request()->validate($rules);
     }
 }

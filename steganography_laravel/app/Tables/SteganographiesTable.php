@@ -36,6 +36,8 @@ class SteganographiesTable extends AbstractTable
     protected function columns(Table $table): void
     {
         $table->column('id')->title(__('ID'))->sortable()->searchable();
+        $table->column('steganography_key')->title(__('Key'))->sortable()->searchable();
+        $table->column('steganography_message')->title(__('Message'))->sortable()->searchable();
     }
 
     /**
