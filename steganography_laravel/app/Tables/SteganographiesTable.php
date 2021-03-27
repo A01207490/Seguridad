@@ -20,6 +20,7 @@ class SteganographiesTable extends AbstractTable
         return (new Table())->model(Steganography::class)
             ->routes([
                 'index'   => ['name' => 'steganographies.index'],
+                'show'   => ['name' => 'steganographies.show'],
                 'create'  => ['name' => 'steganographies.create'],
                 'destroy' => ['name' => 'steganographies.destroy'],
             ])
@@ -37,7 +38,7 @@ class SteganographiesTable extends AbstractTable
     {
         $table->column('id')->title(__('ID'))->sortable()->searchable();
         $table->column('steganography_key')->title(__('Key'))->sortable()->searchable();
-        $table->column('steganography_message')->title(__('Message'))->sortable()->searchable();
+        $table->column('steganography_message')->title(__('Message'))->sortable()->searchable();        
     }
 
     /**
