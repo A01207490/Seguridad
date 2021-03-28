@@ -57,18 +57,18 @@ class RevealController extends Controller
             if (count($byte) == 8) {
                 //binary_string is a string that contains all the bits with zeros to the left of soon to be character
                 $binary_string = implode($byte);
-                echo "binary_string:   " . $binary_string . "<br>";
+                //echo "binary_string:   " . $binary_string . "<br>";
                 //Check if the binary representation of the character is not 3 in ASCII, which is the end of text
                 if ($binary_string != "00000011") {
                     //decimal_value contains the ASCII value of the character
                     $decimal_value = bindec($binary_string);
-                    echo "decimal_value:   " . $decimal_value . "<br>";
+                    //echo "decimal_value:   " . $decimal_value . "<br>";
                     if ($decimal_value > 9) {
                         //Convert the ASCII value to the actual character if it is not a digit
                         $decimal_value = chr($decimal_value);
                     }
                     $message .= $decimal_value;
-                    echo "message:   " . $message . "<br><br>";
+                    //echo "message:   " . $message . "<br><br>";
                     $byte = [];
                 } else {
                     //If it is the end of text, stop reading the image

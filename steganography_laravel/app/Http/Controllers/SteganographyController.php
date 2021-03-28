@@ -68,12 +68,12 @@ class SteganographyController extends Controller
                 //If the character is not a digit, get it's ASCII value, e.g for "a", the function ord would return 97
                 $current_character = ord($current_character);
             }
-            echo "character: " . $current_character . "<br>";
+            //echo "character: " . $current_character . "<br>";
             //At this point, current_character has either digits [0-9], or ASCII values
             //Turn these values into their binary equivalent with decbin
             //binary_string is a string that contains the binary representation of the values, e.g for 97, the string would be "1100001"
             $binary_string = decbin($current_character);
-            echo "binary value: " . $binary_string . "<br>";
+            //echo "binary value: " . $binary_string . "<br>";
             //Split each character of binary_string and allocate them into an array, e.g for "1100001" the array would be [1, 1, 0, 0, 0, 0, 1]
             $binary_array = str_split($binary_string, 1);
             //echo "binary array: " . var_dump($byte_array) . "<br>";
