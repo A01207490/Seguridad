@@ -10,6 +10,9 @@
             <li class="nav-item mr-2 ml-2">
                 <a class="nav-link {{ Request::path() === 'steganographies' ? 'active' : '' }}" href="{{ url('/steganographies') }}">Steganography</a>
             </li>
+            <li class="nav-item mr-2 ml-2">
+                <a class="nav-link {{ Request::path() === 'reveals' ? 'active' : '' }}" href="{{ url('/reveals') }}">Reveal</a>
+            </li>
         </ul>
     </div>
 </nav>

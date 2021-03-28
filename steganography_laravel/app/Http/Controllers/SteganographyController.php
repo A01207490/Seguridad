@@ -54,11 +54,16 @@ class SteganographyController extends Controller
         $image = imagecreatefrompng($filename);
         $width = imagesx($image);
         $height = imagesy($image);
-        for ($i=0; $i < strlen($steganography_message); $i++) { 
+        $message_bits = [];
+        for ($i=0; $i < strlen($steganography_message); $i++) {
+            $byte = decbin($steganography_message[$i]);
+            array_merge($message_bits, str_split($byte, 1));
+        }
+        for ($i=0; $i < count($message_bits); $i++) { 
             $rgb = imagecolorat($image,$i,1);
             $blue = $rgb & 255;
-            $lsb = ($blue >> 1) & 1;
-            if($lsb != $steganography_message[$i]){
+            $lsb = $blue & 1;
+            if($lsb != $message_bits[$i]){
                 $result = 1 ^ $rgb;
             }else{
                 $result = $rgb;
