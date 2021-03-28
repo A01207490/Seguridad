@@ -47,9 +47,11 @@ class SteganographyController extends Controller
             'steganography_message' => $request->steganography_message,
         ]));
         $steganography_message = $request->steganography_message;
+        $steganography_key = $request->steganography_key;
         if (!($request->file('steganography_image') == null)) {
             $request->file('steganography_image')->storeAs('steganography', $steganography->id . '.png', 'public');
         }
+        $steganography_message = $this->polialphabetic_substitution($steganography_message, $steganography_key);
         $filename = (storage_path('app/public/steganography/' . $steganography->id . '.png'));
         $image = imagecreatefrompng($filename);
         $width = imagesx($image);
@@ -66,12 +68,19 @@ class SteganographyController extends Controller
             //Check of if the current character is a digit or not
             if (!(ctype_digit($steganography_message[$i]))) {
                 //If the character is not a digit, get it's ASCII value, e.g for "a", the function ord would return 97
-                $current_character = ord($current_character);
             }
+            //This was taken out of the if even if it makes no sense, but it's what works :'v
+            //Saul's response:
+            //https://cdn.discordapp.com/attachments/705502843192344649/825852090155925504/dsmGaKWMeHXe9QuJtq_ys30PNfTGnMsRuHuo_MUzGCg.png
+            $current_character = ord($current_character);
             //echo "character: " . $current_character . "<br>";
             //At this point, current_character has either digits [0-9], or ASCII values
             //Turn these values into their binary equivalent with decbin
             //binary_string is a string that contains the binary representation of the values, e.g for 97, the string would be "1100001"
+            //These shit doesn't make sense
+            //darle a decbin, ord de un string, trata el string como Dec en la tabla ASCII
+            //darle a decbin, solo un string, trata el string como Chr de la tabla ASCII
+            //darle a decbin, un int, trata el int como Dec de la tabla ASCII
             $binary_string = decbin($current_character);
             //echo "binary value: " . $binary_string . "<br>";
             //Split each character of binary_string and allocate them into an array, e.g for "1100001" the array would be [1, 1, 0, 0, 0, 0, 1]
@@ -92,16 +101,24 @@ class SteganographyController extends Controller
         }
         $message_bits = array_merge($message_bits, [0, 0, 0, 0, 0, 0, 1, 1]);
         //echo var_dump($message_bits) . "<br><br>";
-        for ($i = 0; $i < count($message_bits); $i++) {
-            $rgb = imagecolorat($image, $i, 1);
-            $blue = $rgb & 255;
-            $lsb = $blue & 1;
-            if ($lsb != $message_bits[$i]) {
-                $result = 1 ^ $rgb;
-            } else {
-                $result = $rgb;
+        $length = count($message_bits);
+        $count = 0;
+        for ($i = 0; $i < $width; $i++) {
+            for ($j = 0; $j < $height; $j++) {
+                if ($count == $length) {
+                    break 2;
+                }
+                $rgb = imagecolorat($image, $i, $j);
+                $blue = $rgb & 255;
+                $lsb = $blue & 1;
+                if ($lsb != $message_bits[$count]) {
+                    $result = 1 ^ $rgb;
+                } else {
+                    $result = $rgb;
+                }
+                imagesetpixel($image, $i, $j, $result);
+                $count++;
             }
-            imagesetpixel($image, $i, 1, $result);
         }
         imagepng($image, $filename, 9);
         /*
@@ -111,6 +128,52 @@ class SteganographyController extends Controller
         */
         $index = 'steganographies.index';
         return view('components.success', compact('index'));
+    }
+
+    public function get_displacement(String $character)
+    {
+        $ascii_value = ord($character);
+        $displacement = ($ascii_value % 27) + 1;
+        return $displacement;
+    }
+
+    public function polialphabetic_substitution(String $message, String $key)
+    {
+        $displacement_alphabet1 = $this->get_displacement($key[0]);
+        $displacement_alphabet2 = $this->get_displacement($key[1]);
+        $is_pair = true;
+        for ($i = 0; $i < strlen($message); $i++) {
+            $character = $message[$i];
+            if (ctype_alpha($character)) {
+                if ($is_pair) {
+                    $character = $this->substitute_letter($character, $displacement_alphabet1);
+                } else {
+                    $character = $this->substitute_letter($character, $displacement_alphabet2);
+                }
+            }
+            $message[$i] = $character;
+            $is_pair = !$is_pair;
+        }
+        return $message;
+    }
+
+    public function substitute_letter(String $letter, Int $displacement)
+    {
+        if (ctype_upper($letter)) {
+            $floor = 65;
+            $ceiling = 90;
+        } else {
+            $floor = 97;
+            $ceiling = 122;
+        }
+        $ascii_value = ord($letter);
+        if (($ascii_value + $displacement) > $ceiling) {
+            $new_ascii_value = (($ascii_value + $displacement) - ($ceiling - $floor + 1));
+        } else {
+            $new_ascii_value = ($ascii_value + $displacement);
+        }
+        $new_letter = chr($new_ascii_value);
+        return $new_letter;
     }
 
     /**
@@ -173,7 +236,7 @@ class SteganographyController extends Controller
     public function validateForm()
     {
         $rules = [
-            'steganography_key' => ['required'],
+            'steganography_key' => ['required', "min:2"],
             'steganography_message' => ['required'],
             'steganography_image' => ['required', 'mimes:png'],
 

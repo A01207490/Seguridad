@@ -19,3 +19,15 @@ Route::resource("/reveals", "RevealController");
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/dato', function () {
+    //darle a decbin, ord de un string, trata el string como Dec en la tabla ASCII
+    $ord = decbin(ord(3));
+    //darle a decbin, solo un string, trata el string como Chr de la tabla ASCII
+    $noord = decbin(3);
+    //darle a decbin, un int, trata el int como Dec de la tabla ASCII
+    $cin = decbin(51);
+    echo $ord . "<br>";
+    echo $noord . "<br>";
+    echo $cin . "<br>";
+});
