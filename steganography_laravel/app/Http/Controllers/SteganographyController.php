@@ -54,11 +54,33 @@ class SteganographyController extends Controller
         $image = imagecreatefrompng($filename);
         $width = imagesx($image);
         $height = imagesy($image);
+        // The array in which we dump all the bits of each individal character of the message, this includes the zeros to the left
+        // E.g, character "2", which is 10 in binary, is added as 0000000010
         $message_bits = [];
+        // Auxiliary array that contains the posibly needed padding of each byte, a byte is a character in its binary form 
+        $byte_array_padding=[0,0,0,0,0,0,0,0];
+        // Array that contains the bits of the character, e.g [1, 0] for character "2"
+        $byte_array = [];
+
         for ($i=0; $i < strlen($steganography_message); $i++) {
+            //Obtains a single character in it's binary form, e.g for character "2", byte = 10
             $byte = decbin($steganography_message[$i]);
-            array_merge($message_bits, str_split($byte, 1));
+            //Dumps binary character into an array, e.g 10 is stored as [1,0]
+            $byte_array=str_split($byte, 1);
+            for ($j=0; $j < count($byte_array) ; $j++) {
+                //Here we add the bits in reverse order
+                //10
+                //0000000010
+                //Since we need to overwrite the values of the array with zeros from the last position, we also start to read 10 from the last position, which is zero. That way, we add 0 to the least significative bit, meaning to the rightmost side of the array with padding
+                $byte_array_padding[7-$j] = intval($byte_array[count($byte_array)-1-$j]);
+            }
+            //We add the current byte with padding to the array that contains all the bytes of the message
+            $message_bits = array_merge($message_bits, $byte_array_padding);
+            //echo $byte."<br>";
+            //echo var_dump($byte_array_padding)."<br><br>";
+            $byte_array_padding=[0,0,0,0,0,0,0,0];
         }
+        //echo var_dump($message_bits)."<br><br>";
         for ($i=0; $i < count($message_bits); $i++) { 
             $rgb = imagecolorat($image,$i,1);
             $blue = $rgb & 255;
