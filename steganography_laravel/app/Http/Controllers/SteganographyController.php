@@ -66,7 +66,7 @@ class SteganographyController extends Controller
             //Obtains a single character in it's binary form, e.g for character "2", byte = 10
             $byte = decbin($steganography_message[$i]);
             //Dumps binary character into an array, e.g 10 is stored as [1,0]
-            $byte_array=str_split($byte, 1);
+            $byte_array = str_split($byte, 1);
             for ($j=0; $j < count($byte_array) ; $j++) {
                 //Here we add the bits in reverse order
                 //10
@@ -80,7 +80,8 @@ class SteganographyController extends Controller
             //echo var_dump($byte_array_padding)."<br><br>";
             $byte_array_padding=[0,0,0,0,0,0,0,0];
         }
-        //echo var_dump($message_bits)."<br><br>";
+        $message_bits = array_merge($message_bits, [0,0,0,0,0,0,1,1]);
+        echo var_dump($message_bits)."<br><br>";
         for ($i=0; $i < count($message_bits); $i++) { 
             $rgb = imagecolorat($image,$i,1);
             $blue = $rgb & 255;

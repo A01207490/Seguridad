@@ -49,21 +49,25 @@ class RevealController extends Controller
         for ($i=0; $i < $height; $i++) { 
             $rgb = imagecolorat($image,$i,1);
             $blue = $rgb & 255;
+            echo "blue    ".decbin($blue)."<br>";
             $lsb = $blue & 1;
+            echo "lsb    ".$lsb."<br>";
             array_push($byte,$lsb);
+            echo "byte    ".var_dump($byte)."<br>";
             if (count($byte) == 8) {
                 $character = implode($byte);
-                if($character == 00000011){
+                echo "character    ".$character."<br>";
+                if($character == "00000011"){
                     break;
                 }
                 $message .= chr(bindec($character));
+                echo "message    ".$message."<br>";
                 $byte = [];
             }
         }
-        
         $index = 'reveals.index';
         return $message;
-        return view('components.message', compact('index', 'message'));
+        //return view('components.message', compact('index', 'message'));
     }
 
     /**
