@@ -99,6 +99,7 @@ class SteganographyController extends Controller
             //echo var_dump($binary_array_padding)."<br><br>";
             $binary_array_padding = [0, 0, 0, 0, 0, 0, 0, 0];
         }
+
         $message_bits = array_merge($message_bits, [0, 0, 0, 0, 0, 0, 1, 1]);
         //echo var_dump($message_bits) . "<br><br>";
         $length = count($message_bits);

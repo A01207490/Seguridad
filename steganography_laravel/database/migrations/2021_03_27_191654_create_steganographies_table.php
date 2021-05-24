@@ -16,7 +16,7 @@ class CreateSteganographiesTable extends Migration
         Schema::create('steganographies', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('steganography_key');
-            $table->string('steganography_message');
+            $table->longText('steganography_message');
             $table->timestamps();
         });
     }
